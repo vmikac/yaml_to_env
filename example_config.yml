@@ -1,0 +1,22 @@
+# Server configuration
+server:
+  shutdownGracePeriod: 120s
+  requestLog:
+    appenders: []
+  adminConnectors:
+  - type: http
+    port: 43567
+  applicationConnectors:
+  - type: http
+    port: 43568
+
+# No DB configuration
+
+swagger:
+  enabled: true
+  resourcePackage: com.some.resource.package
+  title: service-fancy-app
+  schemes:
+    - https
+    - http
+
