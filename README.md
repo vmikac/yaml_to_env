@@ -79,6 +79,7 @@ export DW_SWAGGER_SCHEMES_1='http'
 export DW_SWAGGER_TITLE='service-fancy-app'
 ```
 
-```python3 yaml_to_env.py -e DW_ -t export
+```
+python3 yaml_to_env.py -e DW_ -t export
 No input file provided (-f option), and nothing is piped to a script!
 ```
