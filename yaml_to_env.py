@@ -11,13 +11,15 @@ from pathlib import Path
 import sys 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--file', type=str, help='YAML file which needs to be parsed and turned into environment vars', required=True)
+parser.add_argument('-f', '--file', type=str, default=None, 
+                    help='YAML file which needs to be parsed and turned into environment vars. If not provided data will be taken from stdin')
 parser.add_argument('-t', '--type', choices=['export', 'dockerenv'], default='export')
 parser.add_argument('--cmd-prefix', type=str, default=None, help="Command prefix (e.g. export). It will override predefined types in --type option")
 parser.add_argument('-e', '--env-var-prefix', default="", help='Prefix that is added to every env variable name (e.g. "DW_"')
 arguments = parser.parse_args()
 varsYaml = arguments.file
-if not Path(varsYaml).exists():
+
+if varsYaml and not Path(varsYaml).exists():
     print("Provided YAML path does not exist!")
     sys.exit(8)
 
@@ -64,11 +66,31 @@ class EnvEncoder(Visitor):
 
 encoder = EnvEncoder() 
 
-with open(varsYaml, 'r') as stream:
-    try:
-        yaml_file = yaml.safe_load(stream)
-        encoder.visit(yaml_file)
-    except yaml.YAMLError as exc:
-        print(exc)
+data = None
+if varsYaml:
+    with open(varsYaml, 'r') as stream:
+        try:
+            data = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+else:
+    # this will not work for reditection from file, as described in
+    # https://stackoverflow.com/questions/38340729/determine-if-script-is-being-piped-to-in-python-3
+    if not sys.stdin.isatty():
+       stream = '\n'.join(sys.stdin.readlines())
+       try:
+           data = yaml.safe_load(stream)
+       except yaml.YAMLError as exc:
+           print(exc)
+    else:
+        print("No input file provided (-f option), and nothing is piped to a script!")
+        sys.exit(8)
+
+
+if data:
+    encoder.visit(data)
+else:
+    print("Nothnig to parse")
+    sys.exit(8)
 
 
