@@ -61,3 +61,24 @@ export SWAGGER_SCHEMES_0='https'
 export SWAGGER_SCHEMES_1='http'
 export SWAGGER_TITLE='service-fancy-app'
 ```
+
+```
+cat example_config.yml | python3 yaml_to_env.py -e DW_ -t export
+export DW_SERVER_ADMINCONNECTORS_COUNT=1
+export DW_SERVER_ADMINCONNECTORS_0_PORT=43567
+export DW_SERVER_ADMINCONNECTORS_0_TYPE='http'
+export DW_SERVER_APPLICATIONCONNECTORS_COUNT=1
+export DW_SERVER_APPLICATIONCONNECTORS_0_PORT=43568
+export DW_SERVER_APPLICATIONCONNECTORS_0_TYPE='http'
+export DW_SERVER_SHUTDOWNGRACEPERIOD='120s'
+export DW_SWAGGER_ENABLED='True'
+export DW_SWAGGER_RESOURCEPACKAGE='com.some.resource.package'
+export DW_SWAGGER_SCHEMES_COUNT=2
+export DW_SWAGGER_SCHEMES_0='https'
+export DW_SWAGGER_SCHEMES_1='http'
+export DW_SWAGGER_TITLE='service-fancy-app'
+```
+
+```python3 yaml_to_env.py -e DW_ -t export
+No input file provided (-f option), and nothing is piped to a script!
+```
