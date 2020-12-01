@@ -32,3 +32,7 @@ swagger:
     - https
     - http
 
+
+someGeoCoordinatedPois:
+  boundary.lat: 41.37088
+  boundary.lon: 2.183384

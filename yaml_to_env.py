@@ -49,6 +49,11 @@ class EnvEncoder(Visitor):
         # not sure if there will be problem with true, True, TRUE
         return self.visit(str(node))
 
+    def visit_float(self, node):
+        # not sure if there will be problem with true, True, TRUE
+        return self.visit(str(node))
+
+ 
     def visit_list(self, node):
         if len(node) > 0:
             baseParentKey = self.parentKey+("" if self.parentKey =="" else "_")
