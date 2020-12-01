@@ -10,7 +10,19 @@ server:
   - type: http
     port: 43568
 
-# No DB configuration
+database:
+  minSize: 5
+  driverClass: oracle.jdbc.OracleDriver
+  maxSize: 20
+  validationQuery: 'select 1 from dual'
+  logValidationErrors: True
+  url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=some_oracle_host.loc)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=xedb)))
+  initialSize: 5
+  password: some_password
+  user: some_user
+  properties:
+    hibernate.generate_statistics: False
+    hibernate.jdbc.time_zone: Europe/Berlin
 
 swagger:
   enabled: true

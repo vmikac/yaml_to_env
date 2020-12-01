@@ -9,6 +9,8 @@ from visitor import Visitor
 import yaml
 from pathlib import Path
 import sys 
+import re
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', type=str, default=None, 
@@ -35,11 +37,13 @@ class EnvEncoder(Visitor):
         self.parentKey = ""
     
     def visit_str(self, node):
-        print(f"{cmd_prefix}{var_prefix}{self.parentKey}='{node}'")
+        var_name = re.sub('[^0-9a-zA-Z]', '_', self.parentKey)
+        print(f"{cmd_prefix}{var_prefix}{var_name}='{node}'")
 
     def visit_int(self, node):
         # no quotes on integers
-        print(f"{cmd_prefix}{var_prefix}{self.parentKey}={node}")
+        var_name = re.sub('[^0-9a-zA-Z]', '_', self.parentKey)
+        print(f"{cmd_prefix}{var_prefix}{var_name}={node}")
     
     def visit_bool(self, node):
         # not sure if there will be problem with true, True, TRUE
@@ -48,7 +52,8 @@ class EnvEncoder(Visitor):
     def visit_list(self, node):
         if len(node) > 0:
             baseParentKey = self.parentKey+("" if self.parentKey =="" else "_")
-            print(f'{cmd_prefix}{var_prefix}{baseParentKey}COUNT={len(node)}')
+            var_name = re.sub('[^0-9a-zA-Z]', '_', baseParentKey)
+            print(f'{cmd_prefix}{var_prefix}{var_name}COUNT={len(node)}')
             for index, item in enumerate(node):
                 self.parentKey = baseParentKey+str(index)
                 self.visit(item)
@@ -58,7 +63,8 @@ class EnvEncoder(Visitor):
         for key, value in sorted(node.items()):
             self.parentKey = prevParent+("" if prevParent =="" else "_")+key.upper()
             if type(value) == str:
-                print(f"{cmd_prefix}{var_prefix}{self.parentKey}='{value}'")
+                var_name = re.sub('[^0-9a-zA-Z]', '_', self.parentKey)
+                print(f"{cmd_prefix}{var_prefix}{var_name}='{value}'")
             else:
                 self.visit(value)
         # Pop the last known key
