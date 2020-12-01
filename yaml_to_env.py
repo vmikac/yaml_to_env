@@ -37,12 +37,12 @@ class EnvEncoder(Visitor):
         self.parentKey = ""
     
     def visit_str(self, node):
-        var_name = re.sub('[^0-9a-zA-Z]', '_', self.parentKey)
+        var_name = re.sub('[^0-9a-zA-Z]+', '_', self.parentKey)
         print(f"{cmd_prefix}{var_prefix}{var_name}='{node}'")
 
     def visit_int(self, node):
         # no quotes on integers
-        var_name = re.sub('[^0-9a-zA-Z]', '_', self.parentKey)
+        var_name = re.sub('[^0-9a-zA-Z]+', '_', self.parentKey)
         print(f"{cmd_prefix}{var_prefix}{var_name}={node}")
     
     def visit_bool(self, node):
@@ -57,7 +57,7 @@ class EnvEncoder(Visitor):
     def visit_list(self, node):
         if len(node) > 0:
             baseParentKey = self.parentKey+("" if self.parentKey =="" else "_")
-            var_name = re.sub('[^0-9a-zA-Z]', '_', baseParentKey)
+            var_name = re.sub('[^0-9a-zA-Z]+', '_', baseParentKey)
             print(f'{cmd_prefix}{var_prefix}{var_name}COUNT={len(node)}')
             for index, item in enumerate(node):
                 self.parentKey = baseParentKey+str(index)
@@ -68,7 +68,7 @@ class EnvEncoder(Visitor):
         for key, value in sorted(node.items()):
             self.parentKey = prevParent+("" if prevParent =="" else "_")+key.upper()
             if type(value) == str:
-                var_name = re.sub('[^0-9a-zA-Z]', '_', self.parentKey)
+                var_name = re.sub('[^0-9a-zA-Z]+', '_', self.parentKey)
                 print(f"{cmd_prefix}{var_prefix}{var_name}='{value}'")
             else:
                 self.visit(value)
